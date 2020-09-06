@@ -1,0 +1,2 @@
+module SitemapRB
+end
