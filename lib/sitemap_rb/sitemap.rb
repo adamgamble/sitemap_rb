@@ -1,11 +1,12 @@
 module SitemapRb
   class Sitemap
     attr_reader :sitemap_hash
-def initialize
+    def initialize
       @sitemap_hash = {}
     end
 
     def load_from_file path
+      @xml = File.read(path)
       parse
     end
 
@@ -25,9 +26,8 @@ def initialize
 
     # Some sitemaps are indexes of other sitemaps
     def enumerate_sitemaps
-      @sitemap_hash[:sitemaps] ||= []
-
       sitemap_rows = @parser.css('sitemap')
+      @sitemap_hash[:sitemaps] ||= [] if sitemap_rows.any?
       sitemap_rows.each do |row|
         hash = {}
         if row.css('loc').first
@@ -41,9 +41,9 @@ def initialize
     end
 
     def enumerate_links
-      @sitemap_hash[:urls] ||= []
-
       url_rows = @parser.css('url')
+
+      @sitemap_hash[:urls] ||= [] if url_rows.any?
       url_rows.each do |row|
         hash = {}
         if row.css('loc').first
